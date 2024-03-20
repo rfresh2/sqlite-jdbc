@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *--------------------------------------------------------------------------*/
-package org.sqlite;
+package org.rfresh.sqlite;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -23,7 +23,7 @@ import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.sqlite.javax.SQLiteConnectionPoolDataSource;
+import org.rfresh.sqlite.javax.SQLiteConnectionPoolDataSource;
 
 public class SQLiteConnectionPoolDataSourceTest {
 

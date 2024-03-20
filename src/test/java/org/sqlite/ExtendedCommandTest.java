@@ -7,15 +7,16 @@
 // $URL$
 // $Author$
 // --------------------------------------
-package org.sqlite;
+package org.rfresh.sqlite;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
-import org.sqlite.ExtendedCommand.BackupCommand;
-import org.sqlite.ExtendedCommand.RestoreCommand;
-import org.sqlite.ExtendedCommand.SQLExtension;
+import org.rfresh.sqlite.ExtendedCommand;
+import org.rfresh.sqlite.ExtendedCommand.BackupCommand;
+import org.rfresh.sqlite.ExtendedCommand.RestoreCommand;
+import org.rfresh.sqlite.ExtendedCommand.SQLExtension;
 
 public class ExtendedCommandTest {
 

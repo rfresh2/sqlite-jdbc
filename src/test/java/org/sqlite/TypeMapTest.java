@@ -1,4 +1,4 @@
-package org.sqlite;
+package org.rfresh.sqlite;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

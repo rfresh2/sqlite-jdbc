@@ -1,4 +1,4 @@
-package org.sqlite;
+package org.rfresh.sqlite;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -17,8 +17,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.sqlite.core.DB;
-import org.sqlite.core.NativeDBHelper;
+import org.rfresh.sqlite.*;
+import org.rfresh.sqlite.core.DB;
+import org.rfresh.sqlite.core.NativeDBHelper;
 
 public class BusyHandlerTest {
     private Connection conn;

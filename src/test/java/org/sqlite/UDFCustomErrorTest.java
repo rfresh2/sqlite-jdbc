@@ -1,4 +1,4 @@
-package org.sqlite;
+package org.rfresh.sqlite;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
@@ -9,6 +9,7 @@ import java.sql.Statement;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.rfresh.sqlite.Function;
 
 /** Tests User Defined Functions. */
 public class UDFCustomErrorTest {

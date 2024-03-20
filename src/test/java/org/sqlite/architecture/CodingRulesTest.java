@@ -1,4 +1,4 @@
-package org.sqlite.architecture;
+package org.rfresh.sqlite.architecture;
 
 import static com.tngtech.archunit.base.DescribedPredicate.not;
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.equivalentTo;
@@ -17,10 +17,10 @@ import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.conditions.ArchConditions;
 import java.sql.DriverManager;
-import org.sqlite.util.OSInfo;
+import org.rfresh.sqlite.util.OSInfo;
 
 @AnalyzeClasses(
-        packages = "org.sqlite",
+        packages = "org.rfresh.sqlite",
         importOptions = {ImportOption.DoNotIncludeTests.class})
 class CodingRulesTest {
 

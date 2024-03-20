@@ -1,4 +1,4 @@
-package org.sqlite;
+package org.rfresh.sqlite;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -15,9 +15,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.sqlite.SQLiteConfig.JournalMode;
-import org.sqlite.SQLiteConfig.Pragma;
-import org.sqlite.SQLiteConfig.SynchronousMode;
+import org.rfresh.sqlite.SQLiteConfig;
+import org.rfresh.sqlite.SQLiteConfig.JournalMode;
+import org.rfresh.sqlite.SQLiteConfig.Pragma;
+import org.rfresh.sqlite.SQLiteConfig.SynchronousMode;
 
 /**
  * These tests check whether access to files is working correctly and some Connection.close() cases.

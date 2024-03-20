@@ -1,4 +1,4 @@
-package org.sqlite;
+package org.rfresh.sqlite;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -10,8 +10,10 @@ import java.sql.Statement;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.sqlite.core.DB;
-import org.sqlite.core.NativeDBHelper;
+import org.rfresh.sqlite.ProgressHandler;
+import org.rfresh.sqlite.SQLiteConnection;
+import org.rfresh.sqlite.core.DB;
+import org.rfresh.sqlite.core.NativeDBHelper;
 
 public class ProgressHandlerTest {
     private Connection conn;

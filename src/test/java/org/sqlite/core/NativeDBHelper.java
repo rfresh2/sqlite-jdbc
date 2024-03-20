@@ -1,4 +1,7 @@
-package org.sqlite.core;
+package org.rfresh.sqlite.core;
+
+import org.rfresh.sqlite.core.DB;
+import org.rfresh.sqlite.core.NativeDB;
 
 /** This is a helper class for exposing package local functions of NativeDB to unit tests */
 public class NativeDBHelper {

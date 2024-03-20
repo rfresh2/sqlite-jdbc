@@ -7,7 +7,7 @@
 // $URL$
 // $Author$
 // --------------------------------------
-package org.sqlite;
+package org.rfresh.sqlite;
 
 import java.io.File;
 import java.sql.*;

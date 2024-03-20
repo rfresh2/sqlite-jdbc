@@ -1,4 +1,4 @@
-package org.sqlite;
+package org.rfresh.sqlite;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -12,7 +12,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.sqlite.SQLiteConfig.TransactionMode;
+import org.rfresh.sqlite.SQLiteConfig.TransactionMode;
+import org.rfresh.sqlite.SQLiteConnection;
+import org.rfresh.sqlite.SQLiteDataSource;
 
 /**
  * These tests assume that Statements and PreparedStatements are working as per normal and test the

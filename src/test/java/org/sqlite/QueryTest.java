@@ -7,7 +7,7 @@
 // $URL$
 // $Author$
 // --------------------------------------
-package org.sqlite;
+package org.rfresh.sqlite;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -28,7 +28,8 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.TimeZone;
 import org.junit.jupiter.api.Test;
-import org.sqlite.date.FastDateFormat;
+import org.rfresh.sqlite.SQLiteConfig;
+import org.rfresh.sqlite.date.FastDateFormat;
 
 public class QueryTest {
     public Connection getConnection() throws SQLException {

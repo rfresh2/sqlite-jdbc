@@ -22,7 +22,7 @@
 // $URL$
 // $Author$
 // --------------------------------------
-package org.sqlite;
+package org.rfresh.sqlite;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -116,7 +116,7 @@ public class MultipleClassLoaderTest {
                             URLClassLoader classLoader =
                                     new URLClassLoader(
                                             jarUrl, ClassLoader.getSystemClassLoader().getParent());
-                            Class<?> clazz = classLoader.loadClass("org.sqlite.SQLiteJDBCLoader");
+                            Class<?> clazz = classLoader.loadClass("org.rfresh.sqlite.SQLiteJDBCLoader");
                             Method initMethod = clazz.getDeclaredMethod("initialize");
                             initMethod.invoke(null);
                             classLoader.close();

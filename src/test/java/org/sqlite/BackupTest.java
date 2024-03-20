@@ -7,7 +7,7 @@
 // $URL$
 // $Author$
 // --------------------------------------
-package org.sqlite;
+package org.rfresh.sqlite;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -19,7 +19,11 @@ import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.sqlite.core.DB;
+import org.rfresh.sqlite.JDBC;
+import org.rfresh.sqlite.SQLiteConnection;
+import org.rfresh.sqlite.SQLiteErrorCode;
+import org.rfresh.sqlite.SQLiteException;
+import org.rfresh.sqlite.core.DB;
 
 public class BackupTest {
     @TempDir File tempDir;

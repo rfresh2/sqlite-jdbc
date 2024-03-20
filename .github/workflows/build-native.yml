@@ -87,7 +87,7 @@ jobs:
           ref: ${{ needs.check.outputs.ref }}
       # Delete existing libs so we only upload the generated one into the artifact
       - name: Delete existing native libs
-        run: rm -fr src/main/resources/org/sqlite/native
+        run: rm -fr src/main/resources/org/rfresh/sqlite/native
       - name: Build native libraries
         run: make ${{ matrix.target }}
         env:
@@ -96,7 +96,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: native-libs-${{ matrix.target }}
-          path: src/main/resources/org/sqlite/native/
+          path: src/main/resources/org/rfresh/sqlite/native/
 
   push:
     name: Push new native libraries to branch
@@ -113,7 +113,7 @@ jobs:
         with:
           pattern: native-libs-*
           merge-multiple: true
-          path: src/main/resources/org/sqlite/native/
+          path: src/main/resources/org/rfresh/sqlite/native/
 
       - run: git status
       - name: Commit and push

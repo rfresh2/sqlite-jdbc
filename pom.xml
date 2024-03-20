@@ -388,7 +388,7 @@
                         <artifactId>native-maven-plugin</artifactId>
                         <configuration>
                             <buildArgs combine.children="append">
-                                <buildArg>-Dorg.sqlite.lib.exportPath=${project.build.directory}</buildArg>
+                                <buildArg>-Dorg.rfresh.sqlite.lib.exportPath=${project.build.directory}</buildArg>
                             </buildArgs>
                         </configuration>
                     </plugin>

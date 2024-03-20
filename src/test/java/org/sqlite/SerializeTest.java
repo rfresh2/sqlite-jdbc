@@ -1,4 +1,4 @@
-package org.sqlite;
+package org.rfresh.sqlite;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -9,6 +9,9 @@ import java.nio.file.Files;
 import java.sql.*;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.rfresh.sqlite.SQLiteConnection;
+import org.rfresh.sqlite.SQLiteErrorCode;
+import org.rfresh.sqlite.SQLiteException;
 
 public class SerializeTest {
 

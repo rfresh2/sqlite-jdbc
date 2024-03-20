@@ -1,9 +1,10 @@
-package org.sqlite;
+package org.rfresh.sqlite;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Properties;
 import org.junit.jupiter.api.Test;
+import org.rfresh.sqlite.SQLiteConfig;
 
 public class SQLiteConfigTest {
 

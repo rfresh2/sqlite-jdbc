@@ -1,4 +1,4 @@
-package org.sqlite.architecture;
+package org.rfresh.sqlite.architecture;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
@@ -8,7 +8,7 @@ import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 
 @AnalyzeClasses(
-        packages = "org.sqlite",
+        packages = "org.rfresh.sqlite",
         importOptions = {ImportOption.OnlyIncludeTests.class})
 class TestCodingRulesTest {
 

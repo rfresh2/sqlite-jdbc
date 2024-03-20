@@ -1,4 +1,4 @@
-package org.sqlite;
+package org.rfresh.sqlite;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -22,8 +22,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.sqlite.jdbc3.JDBC3Statement;
-import org.sqlite.jdbc4.JDBC4Statement;
+import org.rfresh.sqlite.SQLiteConnection;
+import org.rfresh.sqlite.jdbc3.JDBC3Statement;
+import org.rfresh.sqlite.jdbc4.JDBC4Statement;
 
 /** These tests are designed to stress Statements on memory databases. */
 public class StatementTest {

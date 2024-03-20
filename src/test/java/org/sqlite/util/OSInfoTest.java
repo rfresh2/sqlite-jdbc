@@ -7,7 +7,7 @@
 // $URL$
 // $Author$
 // --------------------------------------
-package org.sqlite.util;
+package org.rfresh.sqlite.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -22,6 +22,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 import org.junit.jupiter.api.condition.DisabledInNativeImage;
 import org.junitpioneer.jupiter.SetSystemProperty;
+import org.rfresh.sqlite.util.OSInfo;
+import org.rfresh.sqlite.util.ProcessRunner;
 
 @DisabledIfEnvironmentVariable(
         named = "SKIP_TEST_OSINFO",
@@ -176,7 +178,7 @@ public class OSInfoTest {
     }
 
     @Test
-    @SetSystemProperty(key = "org.sqlite.osinfo.architecture", value = "overridden")
+    @SetSystemProperty(key = "org.rfresh.sqlite.osinfo.architecture", value = "overridden")
     @SetSystemProperty(key = "os.name", value = "Windows")
     void testOverride() {
         assertThat(OSInfo.getArchName()).isEqualTo("overridden");

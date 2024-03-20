@@ -1,4 +1,4 @@
-package org.sqlite;
+package org.rfresh.sqlite;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -22,6 +22,8 @@ import java.util.StringTokenizer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.rfresh.sqlite.SQLiteErrorCode;
+import org.rfresh.sqlite.SQLiteException;
 
 /** These tests are designed to stress PreparedStatements on memory dbs. */
 public class PrepStmtTest {

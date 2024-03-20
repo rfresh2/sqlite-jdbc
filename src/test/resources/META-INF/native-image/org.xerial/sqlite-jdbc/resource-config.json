@@ -2,7 +2,7 @@
   "resources": {
     "includes": [
       {
-        "pattern": "^org/sqlite/.+\\.(jar|db)$"
+        "pattern": "^org/rfresh/sqlite/.+\\.(jar|db)$"
       },
       {
         "pattern": "\\Qjavax/sql/rowset/rowset.properties\\E"

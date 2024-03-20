@@ -7,7 +7,7 @@ RESOURCE_DIR = src/main/resources
 
 all: jni-header package
 
-deploy: 
+deploy:
 	mvn package deploy -DperformRelease=true
 
 DOCKER_RUN_OPTS=--rm
@@ -48,15 +48,15 @@ $(JAVA_CLASSPATH):
 	@mkdir -p $(@D)
 	curl -L -f -o$@ https://search.maven.org/remotecontent?filepath=org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar
 
-$(TARGET)/common-lib/org/sqlite/%.class: src/main/java/org/sqlite/%.java
+$(TARGET)/common-lib/org/rfresh/sqlite/%.class: src/main/java/org/rfresh/sqlite/%.java
 	@mkdir -p $(@D)
 	$(JAVAC) -source 1.6 -target 1.6 -sourcepath $(SRC) -d $(TARGET)/common-lib $<
 
 jni-header: $(TARGET)/common-lib/NativeDB.h
 
-$(TARGET)/common-lib/NativeDB.h: src/main/java/org/sqlite/core/NativeDB.java $(JAVA_CLASSPATH)
+$(TARGET)/common-lib/NativeDB.h: src/main/java/org/rfresh/sqlite/core/NativeDB.java $(JAVA_CLASSPATH)
 	@mkdir -p $(TARGET)/common-lib
-	$(JAVAC) -cp $(JAVA_CLASSPATH) -d $(TARGET)/common-lib -sourcepath $(SRC) -h $(TARGET)/common-lib src/main/java/org/sqlite/core/NativeDB.java
+	$(JAVAC) -cp $(JAVA_CLASSPATH) -d $(TARGET)/common-lib -sourcepath $(SRC) -h $(TARGET)/common-lib src/main/java/org/rfresh/sqlite/core/NativeDB.java
 	mv target/common-lib/org_sqlite_core_NativeDB.h target/common-lib/NativeDB.h
 
 test:
@@ -107,17 +107,17 @@ $(SQLITE_OUT)/sqlite3.o : $(SQLITE_UNPACKED)
 
 $(SQLITE_SOURCE)/sqlite3.h: $(SQLITE_UNPACKED)
 
-$(SQLITE_OUT)/$(LIBNAME): $(SQLITE_HEADER) $(SQLITE_OBJ) $(SRC)/org/sqlite/core/NativeDB.c $(TARGET)/common-lib/NativeDB.h
+$(SQLITE_OUT)/$(LIBNAME): $(SQLITE_HEADER) $(SQLITE_OBJ) $(SRC)/org/rfresh/sqlite/core/NativeDB.c $(TARGET)/common-lib/NativeDB.h
 	@mkdir -p $(@D)
-	$(CC) $(CCFLAGS) -I $(TARGET)/common-lib -c -o $(SQLITE_OUT)/NativeDB.o $(SRC)/org/sqlite/core/NativeDB.c
+	$(CC) $(CCFLAGS) -I $(TARGET)/common-lib -c -o $(SQLITE_OUT)/NativeDB.o $(SRC)/org/rfresh/sqlite/core/NativeDB.c
 	$(CC) $(CCFLAGS) -o $@ $(SQLITE_OUT)/NativeDB.o $(SQLITE_OBJ) $(LINKFLAGS)
 # Workaround for strip Protocol error when using VirtualBox on Mac
 	cp $@ /tmp/$(@F)
 	$(STRIP) /tmp/$(@F)
 	cp /tmp/$(@F) $@
 
-NATIVE_DIR=src/main/resources/org/sqlite/native/$(OS_NAME)/$(OS_ARCH)
-NATIVE_TARGET_DIR:=$(TARGET)/classes/org/sqlite/native/$(OS_NAME)/$(OS_ARCH)
+NATIVE_DIR=src/main/resources/org/rfresh/sqlite/native/$(OS_NAME)/$(OS_ARCH)
+NATIVE_TARGET_DIR:=$(TARGET)/classes/org/rfresh/sqlite/native/$(OS_NAME)/$(OS_ARCH)
 NATIVE_DLL:=$(NATIVE_DIR)/$(LIBNAME)
 
 # For cross-compilation, install docker. See also https://github.com/dockcross/dockcross
@@ -208,10 +208,10 @@ sparcv9:
 	$(MAKE) native OS_NAME=SunOS OS_ARCH=sparcv9
 
 mac64-signed: mac64
-	$(CODESIGN) src/main/resources/org/sqlite/native/Mac/x86_64/libsqlitejdbc.dylib
+	$(CODESIGN) src/main/resources/org/rfresh/sqlite/native/Mac/x86_64/libsqlitejdbc.dylib
 
 mac-arm64-signed: mac-arm64
-	$(CODESIGN) src/main/resources/org/sqlite/native/Mac/aarch64/libsqlitejdbc.dylib
+	$(CODESIGN) src/main/resources/org/rfresh/sqlite/native/Mac/aarch64/libsqlitejdbc.dylib
 
 package: native-all
 	rm -rf target/dependency-maven-plugin-markers
