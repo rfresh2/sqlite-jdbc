@@ -57,7 +57,7 @@ jni-header: $(TARGET)/common-lib/NativeDB.h
 $(TARGET)/common-lib/NativeDB.h: src/main/java/org/rfresh/sqlite/core/NativeDB.java $(JAVA_CLASSPATH)
 	@mkdir -p $(TARGET)/common-lib
 	$(JAVAC) -cp $(JAVA_CLASSPATH) -d $(TARGET)/common-lib -sourcepath $(SRC) -h $(TARGET)/common-lib src/main/java/org/rfresh/sqlite/core/NativeDB.java
-	mv target/common-lib/org_sqlite_core_NativeDB.h target/common-lib/NativeDB.h
+	mv target/common-lib/org_rfresh_sqlite_core_NativeDB.h target/common-lib/NativeDB.h
 
 test:
 	mvn test
