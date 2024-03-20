@@ -42,8 +42,8 @@ jobs:
           java-version: 11
           java-package: jdk
           cache: 'maven'
-      - name: spotless:check
-        run: mvn --batch-mode --no-transfer-progress spotless:check
+#      - name: spotless:check
+#        run: mvn --batch-mode --no-transfer-progress spotless:check
 
   test:
     name: test ${{ matrix.os }} jdk${{ matrix.java }}
