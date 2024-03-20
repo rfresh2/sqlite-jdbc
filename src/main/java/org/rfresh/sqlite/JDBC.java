@@ -24,7 +24,7 @@ import org.rfresh.sqlite.jdbc4.JDBC4Connection;
 
 public class JDBC implements Driver {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(JDBC.class);
-    public static final String PREFIX = "jdbc:sqlite:";
+    public static final String PREFIX = "jdbc:rfresh_sqlite:";
 
     static {
         try {

@@ -29,7 +29,7 @@ import org.rfresh.sqlite.core.DB;
  *
  * <pre>
  *      Class.forName("org.rfresh.sqlite.JDBC");
- *      Connection conn = DriverManager.getConnection("jdbc:sqlite:");
+ *      Connection conn = DriverManager.getConnection("jdbc:rfresh_sqlite:");
  *
  *      Collation.create(conn, "REVERSE", new Collation() {
  *          protected int xCompare(String str1, String str2) {

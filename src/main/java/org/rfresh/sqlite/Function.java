@@ -29,7 +29,7 @@ import org.rfresh.sqlite.core.DB;
  *
  * <pre>
  *      Class.forName("org.rfresh.sqlite.JDBC");
- *      Connection conn = DriverManager.getConnection("jdbc:sqlite:");
+ *      Connection conn = DriverManager.getConnection("jdbc:rfresh_sqlite:");
  *
  *      Function.create(conn, "myFunc", new Function() {
  *          protected void xFunc() {
