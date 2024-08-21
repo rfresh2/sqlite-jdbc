@@ -399,11 +399,11 @@ public class SQLiteJDBCLoader {
         static {
             URL versionFile =
                     VersionHolder.class.getResource(
-                            "/META-INF/maven/org.xerial/sqlite-jdbc/pom.properties");
+                            "/META-INF/maven/org.rfresh.xerial/sqlite-jdbc/pom.properties");
             if (versionFile == null) {
                 versionFile =
                         VersionHolder.class.getResource(
-                                "/META-INF/maven/org.xerial/sqlite-jdbc/VERSION");
+                                "/META-INF/maven/org.rfresh.xerial/sqlite-jdbc/VERSION");
             }
 
             String version = "unknown";

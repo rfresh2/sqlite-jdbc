@@ -1640,7 +1640,7 @@ public class DBMetaDataTest {
         Properties version;
         try (InputStream resourceAsStream =
                 DBMetaDataTest.class.getResourceAsStream(
-                        "/META-INF/maven/org.xerial/sqlite-jdbc/VERSION")) {
+                        "/META-INF/maven/org.rfresh.xerial/sqlite-jdbc/VERSION")) {
             version = new Properties();
             assumeThat(resourceAsStream).isNotNull();
             version.load(resourceAsStream);
