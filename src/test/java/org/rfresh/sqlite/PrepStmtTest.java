@@ -88,14 +88,14 @@ public class PrepStmtTest {
         SQLiteConnection connection =
                 (SQLiteConnection)
                         DriverManager.getConnection(
-                                "jdbc:sqlite::memory:?jdbc.get_generated_keys=false");
+                                "jdbc:rfresh_sqlite::memory:?jdbc.get_generated_keys=false");
         assertThat(connection.getConnectionConfig().isGetGeneratedKeys()).isFalse();
     }
 
     @Test
     public void updateWithoutGeneratedKeys() throws SQLException {
         Connection conn =
-                DriverManager.getConnection("jdbc:sqlite::memory:?jdbc.get_generated_keys=false");
+                DriverManager.getConnection("jdbc:rfresh_sqlite::memory:?jdbc.get_generated_keys=false");
 
         assertThat(conn.prepareStatement("create table s1 (c1);").executeUpdate()).isEqualTo(0);
         PreparedStatement prep = conn.prepareStatement("insert into s1 values (?);");
