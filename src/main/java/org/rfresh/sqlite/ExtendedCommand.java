@@ -40,6 +40,8 @@ public class ExtendedCommand {
             return BackupCommand.parse(sql);
         else if (sql.length() > 6 && sql.substring(0, 7).toLowerCase().equals("restore"))
             return RestoreCommand.parse(sql);
+        else if (sql.length() > 6 && sql.substring(0, 7).toLowerCase().equals("recover"))
+            return RecoverCommand.parse(sql);
 
         return null;
     }
@@ -151,6 +153,36 @@ public class ExtendedCommand {
         public void execute(DB db) throws SQLException {
             int rc = db.restore(targetDB, srcFile, null);
 
+            if (rc != SQLiteErrorCode.SQLITE_OK.code) {
+                throw DB.newSQLException(rc, "Restore failed");
+            }
+        }
+    }
+
+    public static class RecoverCommand implements SQLExtension {
+        private final String destFilePath;
+        private static Pattern recoverCmd = Pattern.compile(
+            "recover(\\s+(\"[^\"]*\"|'[^\']*\'|\\S+))?\\s+to\\s+(\"[^\"]*\"|'[^\']*\'|\\S+)",
+            Pattern.CASE_INSENSITIVE);
+
+        public RecoverCommand(final String destFilePath) {
+            this.destFilePath = destFilePath;
+        }
+
+        public static RecoverCommand parse(String sql) throws SQLException {
+            if (sql != null) {
+                Matcher m = recoverCmd.matcher(sql);
+                if (m.matches()) {
+                    String dest = removeQuotation(m.group(3));
+                    return new RecoverCommand(dest);
+                }
+            }
+            throw new SQLException("syntax error: " + sql);
+        }
+
+        @Override
+        public void execute(final DB db) throws SQLException {
+            int rc = db.recoverDatabase(destFilePath);
             if (rc != SQLiteErrorCode.SQLITE_OK.code) {
                 throw DB.newSQLException(rc, "Restore failed");
             }

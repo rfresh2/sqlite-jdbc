@@ -21,13 +21,15 @@ SQLITE_ARCHIVE:=$(TARGET)/$(sqlite)-amal.zip
 SQLITE_UNPACKED:=$(TARGET)/sqlite-unpack.log
 SQLITE_SOURCE?=$(TARGET)/$(SQLITE_AMAL_PREFIX)
 SQLITE_HEADER?=$(SQLITE_SOURCE)/sqlite3.h
+RECOVERY_SRC := $(wildcard src/main/ext_recovery/*.c)
+RECOVERY_OBJ := $(patsubst src/main/ext_recovery/%.c, $(SQLITE_OUT)/%.o, $(RECOVERY_SRC))
 ifneq ($(SQLITE_SOURCE),$(TARGET)/$(SQLITE_AMAL_PREFIX))
 	created := $(shell touch $(SQLITE_UNPACKED))
 endif
 
 SQLITE_INCLUDE := $(shell dirname "$(SQLITE_HEADER)")
 
-CCFLAGS:= -I$(SQLITE_OUT) -I$(SQLITE_INCLUDE) $(CCFLAGS)
+CCFLAGS:= -I$(SQLITE_OUT) -I$(SQLITE_INCLUDE) -Isrc/main/ext_recovery $(CCFLAGS)
 
 $(SQLITE_ARCHIVE):
 	@mkdir -p $(@D)
@@ -46,7 +48,7 @@ $(SQLITE_UNPACKED): $(SQLITE_ARCHIVE)
 
 $(JAVA_CLASSPATH):
 	@mkdir -p $(@D)
-	curl -L -f -o$@ https://search.maven.org/remotecontent?filepath=org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar
+	curl -L -f -o$@ https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar
 
 $(TARGET)/common-lib/org/rfresh/sqlite/%.class: src/main/java/org/rfresh/sqlite/%.java
 	@mkdir -p $(@D)
@@ -102,15 +104,20 @@ $(SQLITE_OUT)/sqlite3.o : $(SQLITE_UNPACKED)
 	    -DSQLITE_MAX_ATTACHED=125 \
 	    -DSQLITE_MAX_PAGE_COUNT=4294967294 \
 	    -DSQLITE_DISABLE_PAGECACHE_OVERFLOW_STATS \
+	    -DSQLITE_ENABLE_DBPAGE_VTAB \
 	    $(SQLITE_FLAGS) \
 	    $(SQLITE_OUT)/sqlite3.c
 
 $(SQLITE_SOURCE)/sqlite3.h: $(SQLITE_UNPACKED)
 
-$(SQLITE_OUT)/$(LIBNAME): $(SQLITE_HEADER) $(SQLITE_OBJ) $(SRC)/org/rfresh/sqlite/core/NativeDB.c $(TARGET)/common-lib/NativeDB.h
+$(SQLITE_OUT)/%.o: src/main/ext_recovery/%.c
+	@mkdir -p $(@D)
+	$(CC) $(CCFLAGS) -c -o $@ $<
+
+$(SQLITE_OUT)/$(LIBNAME): $(SQLITE_HEADER) $(SQLITE_OBJ) $(SRC)/org/rfresh/sqlite/core/NativeDB.c $(TARGET)/common-lib/NativeDB.h $(RECOVERY_OBJ)
 	@mkdir -p $(@D)
 	$(CC) $(CCFLAGS) -I $(TARGET)/common-lib -c -o $(SQLITE_OUT)/NativeDB.o $(SRC)/org/rfresh/sqlite/core/NativeDB.c
-	$(CC) $(CCFLAGS) -o $@ $(SQLITE_OUT)/NativeDB.o $(SQLITE_OBJ) $(LINKFLAGS)
+	$(CC) $(CCFLAGS) -o $@ $(SQLITE_OUT)/NativeDB.o $(SQLITE_OBJ) $(RECOVERY_OBJ) $(LINKFLAGS)
 # Workaround for strip Protocol error when using VirtualBox on Mac
 	cp $@ /tmp/$(@F)
 	$(STRIP) /tmp/$(@F)
