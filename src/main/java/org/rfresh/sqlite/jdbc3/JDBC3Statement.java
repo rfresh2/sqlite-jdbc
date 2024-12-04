@@ -7,14 +7,16 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
+import java.text.MessageFormat;
 import java.util.Arrays;
-
 import org.rfresh.sqlite.ExtendedCommand;
+import org.rfresh.sqlite.ExtendedCommand.SQLExtension;
 import org.rfresh.sqlite.SQLiteConnection;
 import org.rfresh.sqlite.core.CoreStatement;
 import org.rfresh.sqlite.core.DB;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.rfresh.sqlite.core.DB.ProgressObserver;
+import org.rfresh.sqlite.util.Logger;
+import org.rfresh.sqlite.util.LoggerFactory;
 
 public abstract class JDBC3Statement extends CoreStatement {
 
@@ -41,7 +43,7 @@ public abstract class JDBC3Statement extends CoreStatement {
 
         return this.withConnectionTimeout(
                 () -> {
-                    ExtendedCommand.SQLExtension ext = ExtendedCommand.parse(sql);
+                    SQLExtension ext = ExtendedCommand.parse(sql);
                     if (ext != null) {
                         ext.execute(conn.getDatabase());
 
@@ -95,11 +97,14 @@ public abstract class JDBC3Statement extends CoreStatement {
                 });
     }
 
-    static class BackupObserver implements DB.ProgressObserver {
+    static class BackupObserver implements ProgressObserver {
         private static final Logger logger = LoggerFactory.getLogger(BackupObserver.class);
 
         public void progress(int remaining, int pageCount) {
-            logger.info("remaining:{}, page count:{}", remaining, pageCount);
+            logger.info(
+                    () ->
+                            MessageFormat.format(
+                                    "remaining:{0}, page count:{1}", remaining, pageCount));
         }
     }
 
@@ -122,7 +127,7 @@ public abstract class JDBC3Statement extends CoreStatement {
                 () -> {
                     DB db = conn.getDatabase();
                     long changes = 0;
-                    ExtendedCommand.SQLExtension ext = ExtendedCommand.parse(sql);
+                    SQLExtension ext = ExtendedCommand.parse(sql);
                     if (ext != null) {
                         // execute extended command
                         ext.execute(db);

@@ -1,6 +1,6 @@
 module org.rfresh.sqlitejdbc {
 
-    requires org.slf4j;
+    requires static org.slf4j;
     requires transitive java.sql;
     requires transitive java.sql.rowset;
     requires static org.graalvm.nativeimage;

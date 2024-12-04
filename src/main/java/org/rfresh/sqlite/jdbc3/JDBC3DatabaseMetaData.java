@@ -21,15 +21,14 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 import org.rfresh.sqlite.SQLiteConnection;
 import org.rfresh.sqlite.core.CoreDatabaseMetaData;
 import org.rfresh.sqlite.core.CoreStatement;
+import org.rfresh.sqlite.jdbc3.JDBC3DatabaseMetaData.ImportedKeyFinder.ForeignKey;
+import org.rfresh.sqlite.util.Logger;
+import org.rfresh.sqlite.util.LoggerFactory;
 import org.rfresh.sqlite.util.QueryUtils;
 import org.rfresh.sqlite.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.rfresh.sqlite.jdbc3.JDBC3DatabaseMetaData.ImportedKeyFinder.ForeignKey;
 
 public abstract class JDBC3DatabaseMetaData extends CoreDatabaseMetaData {
 
@@ -965,14 +964,14 @@ public abstract class JDBC3DatabaseMetaData extends CoreDatabaseMetaData {
                         try {
                             rsColAutoinc.close();
                         } catch (Exception e) {
-                            LogHolder.logger.error("Could not close ResultSet", e);
+                            LogHolder.logger.error(() -> "Could not close ResultSet", e);
                         }
                     }
                     if (statColAutoinc != null) {
                         try {
                             statColAutoinc.close();
                         } catch (Exception e) {
-                            LogHolder.logger.error("Could not close statement", e);
+                            LogHolder.logger.error(() -> "Could not close statement", e);
                         }
                     }
                 }
@@ -1126,7 +1125,7 @@ public abstract class JDBC3DatabaseMetaData extends CoreDatabaseMetaData {
                 try {
                     rs.close();
                 } catch (Exception e) {
-                    LogHolder.logger.error("Could not close ResultSet", e);
+                    LogHolder.logger.error(() -> "Could not close ResultSet", e);
                 }
             }
         }

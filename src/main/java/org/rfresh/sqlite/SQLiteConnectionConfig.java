@@ -17,6 +17,7 @@ public class SQLiteConnectionConfig implements Cloneable {
     private int transactionIsolation = Connection.TRANSACTION_SERIALIZABLE;
     private SQLiteConfig.TransactionMode transactionMode = SQLiteConfig.TransactionMode.DEFERRED;
     private boolean autoCommit = true;
+    private boolean getGeneratedKeys = true;
 
     public static SQLiteConnectionConfig fromPragmaTable(Properties pragmaTable) {
         return new SQLiteConnectionConfig(
@@ -36,7 +37,10 @@ public class SQLiteConnectionConfig implements Cloneable {
                         pragmaTable.getProperty(
                                 SQLiteConfig.Pragma.TRANSACTION_MODE.pragmaName,
                                 SQLiteConfig.TransactionMode.DEFERRED.name())),
-                true);
+                true,
+                Boolean.parseBoolean(
+                        pragmaTable.getProperty(
+                                SQLiteConfig.Pragma.JDBC_GET_GENERATED_KEYS.pragmaName, "true")));
     }
 
     public SQLiteConnectionConfig(
@@ -45,13 +49,15 @@ public class SQLiteConnectionConfig implements Cloneable {
             String dateStringFormat,
             int transactionIsolation,
             SQLiteConfig.TransactionMode transactionMode,
-            boolean autoCommit) {
+            boolean autoCommit,
+            boolean getGeneratedKeys) {
         setDateClass(dateClass);
         setDatePrecision(datePrecision);
         setDateStringFormat(dateStringFormat);
         setTransactionIsolation(transactionIsolation);
         setTransactionMode(transactionMode);
         setAutoCommit(autoCommit);
+        setGetGeneratedKeys(getGeneratedKeys);
     }
 
     public SQLiteConnectionConfig copyConfig() {
@@ -61,7 +67,8 @@ public class SQLiteConnectionConfig implements Cloneable {
                 dateStringFormat,
                 transactionIsolation,
                 transactionMode,
-                autoCommit);
+                autoCommit,
+                getGeneratedKeys);
     }
 
     public long getDateMultiplier() {
@@ -122,8 +129,16 @@ public class SQLiteConnectionConfig implements Cloneable {
         this.transactionMode = transactionMode;
     }
 
+    public boolean isGetGeneratedKeys() {
+        return getGeneratedKeys;
+    }
+
+    public void setGetGeneratedKeys(boolean getGeneratedKeys) {
+        this.getGeneratedKeys = getGeneratedKeys;
+    }
+
     private static final Map<SQLiteConfig.TransactionMode, String> beginCommandMap =
-            new EnumMap<SQLiteConfig.TransactionMode, String>(SQLiteConfig.TransactionMode.class);
+            new EnumMap<>(SQLiteConfig.TransactionMode.class);
 
     static {
         beginCommandMap.put(SQLiteConfig.TransactionMode.DEFERRED, "begin;");
