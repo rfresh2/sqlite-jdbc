@@ -19,6 +19,7 @@
 #include <assert.h>
 #include "NativeDB.h"
 #include "sqlite3.h"
+#include "sqlite3recover.h"
 
 // Java class variables and method references initialized on library load.
 // These classes are weak references to that if the classloader is no longer referenced (garbage)
@@ -1684,6 +1685,52 @@ JNIEXPORT jint JNICALL Java_org_rfresh_sqlite_core_NativeDB_restore(
 #else
   return SQLITE_INTERNAL;
 #endif
+}
+
+static int recoverDatabase(JNIEnv *env, sqlite3 *db, const char *zDestFile){
+  int rc;                                 /* Return code from this routine */
+  const char *zLAF = "lost_and_found";    /* Name of "lost_and_found" table */
+  int bFreelist = 1;                      /* True to scan the freelist */
+  int bRowids = 1;                        /* True to restore ROWID values */
+  sqlite3_recover *p;                     /* The recovery object */
+
+  p = sqlite3_recover_init(db, "main", zDestFile);
+  sqlite3_recover_config(p, SQLITE_RECOVER_LOST_AND_FOUND, (void*)zLAF);
+  sqlite3_recover_config(p, SQLITE_RECOVER_ROWIDS, (void*)&bRowids);
+  sqlite3_recover_config(p, SQLITE_RECOVER_FREELIST_CORRUPT,(void*)&bFreelist);
+  sqlite3_recover_run(p);
+  if( sqlite3_recover_errcode(p)!=SQLITE_OK ){
+    const char *zErr = sqlite3_recover_errmsg(p);
+    int errCode = sqlite3_recover_errcode(p);
+    size_t len = strlen(zErr) + 20; // Extra space for " CODE: " and the error number
+    char *ex_msg = (char *)malloc(len);
+    if (ex_msg) {
+        snprintf(ex_msg, len, "%s CODE: %d", zErr, errCode);
+    }
+    throwex_msg(env, ex_msg);
+    free(ex_msg);
+  }
+  rc = sqlite3_recover_finish(p);
+  return rc;
+}
+
+JNIEXPORT jint JNICALL Java_org_rfresh_sqlite_core_NativeDB_recoverDatabase(
+	JNIEnv *env,
+	jobject this,
+	jbyteArray destFilePath
+)
+{
+   sqlite3 *db = gethandle(env, this);
+   if (!db)
+   {
+		throwex_db_closed(env);
+		return SQLITE_MISUSE;
+   }
+   char* dDestFilePath;
+   utf8JavaByteArrayToUtf8Bytes(env, destFilePath, &dDestFilePath, NULL);
+   int rc = recoverDatabase(env, db, dDestFilePath);
+   freeUtf8Bytes(dDestFilePath);
+   return rc;
 }
 
 

@@ -467,6 +467,13 @@ public final class NativeDB extends DB {
             int pagesPerStep)
             throws SQLException;
 
+    @Override
+    public synchronized int recoverDatabase(String destFilePath) throws SQLException {
+        return recoverDatabase(stringToUtf8ByteArray(destFilePath));
+    }
+
+    synchronized native int recoverDatabase(byte[] destFilePath) throws SQLException;
+
     // COMPOUND FUNCTIONS (for optimisation) /////////////////////////
 
     /**
