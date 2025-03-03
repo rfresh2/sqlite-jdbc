@@ -4,17 +4,17 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.rfresh.xerial</groupId>
     <artifactId>sqlite-jdbc</artifactId>
-    <version>3.47.1.0</version>
+    <version>3.49.1.0</version>
     <name>SQLite JDBC</name>
     <description>SQLite JDBC library</description>
     <url>https://github.com/xerial/sqlite-jdbc</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.version>5.11.3</junit.version>
+        <junit.version>5.11.4</junit.version>
         <surefire.version>3.5.2</surefire.version>
-        <archunit.version>1.3.0</archunit.version>
-        <graalvm.version>24.1.1</graalvm.version>
+        <archunit.version>1.4.0</archunit.version>
+        <graalvm.version>24.1.2</graalvm.version>
         <java9.sourceDirectory>${project.basedir}/src/main/java9</java9.sourceDirectory>
     </properties>
 
@@ -242,7 +242,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.11.1</version>
+                        <version>3.11.2</version>
                         <configuration>
                             <sourcepath>src/main/java</sourcepath>
                             <additionalOptions>-Xdoclint:none</additionalOptions>
@@ -281,7 +281,7 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>0.10.3</version>
+                        <version>0.10.5</version>
                         <extensions>true</extensions>
                         <executions>
                             <execution>
@@ -380,7 +380,7 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.26.3</version>
+            <version>3.27.3</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -402,7 +402,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.14.2</version>
+            <version>5.15.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
