@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2007 David Crawshaw <david@zentus.com>
- * 
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
@@ -19,6 +19,7 @@
 #include <assert.h>
 #include "NativeDB.h"
 #include "sqlite3.h"
+#include "sqlite3recover.h"
 
 // Java class variables and method references initialized on library load.
 // These classes are weak references to that if the classloader is no longer referenced (garbage)
@@ -738,7 +739,7 @@ JNIEXPORT jobject JNICALL Java_org_sqlite_core_NativeDB_errmsg_1utf8(JNIEnv *env
         throwex_db_closed(env);
         return NULL;
     }
-    
+
     str = (const char*) sqlite3_errmsg(db);
     if (!str) return NULL;
     return utf8BytesToDirectByteBuffer(env, str, strlen(str));
@@ -1343,7 +1344,7 @@ JNIEXPORT jint JNICALL Java_org_sqlite_core_NativeDB_destroy_1function_1utf8(
 
     utf8JavaByteArrayToUtf8Bytes(env, name, &name_bytes, NULL);
     if (!name_bytes) { throwex_outofmemory(env); return 0; }
-    
+
     ret = sqlite3_create_function(
         gethandle(env, nativeDB), name_bytes, -1, SQLITE_UTF16, NULL, NULL, NULL, NULL
     );
@@ -1545,7 +1546,7 @@ void copyLoop(JNIEnv *env, sqlite3_backup *pBackup, jobject progress,
 ** Otherwise, if an error occurs, an SQLite error code is returned.
 */
 JNIEXPORT jint JNICALL Java_org_sqlite_core_NativeDB_backup(
-  JNIEnv *env, jobject this, 
+  JNIEnv *env, jobject this,
   jbyteArray zDBName,
   jbyteArray zFilename,       /* Name of file to back up to */
   jobject observer,           /* Progress function to invoke */
@@ -1613,10 +1614,10 @@ JNIEXPORT jint JNICALL Java_org_sqlite_core_NativeDB_backup(
 #else
   return SQLITE_INTERNAL;
 #endif
-} 
+}
 
 JNIEXPORT jint JNICALL Java_org_sqlite_core_NativeDB_restore(
-  JNIEnv *env, jobject this, 
+  JNIEnv *env, jobject this,
   jbyteArray zDBName,
   jbyteArray zFilename,         /* Name of file to restore from */
   jobject observer,             /* Progress function to invoke */
@@ -1684,6 +1685,52 @@ JNIEXPORT jint JNICALL Java_org_sqlite_core_NativeDB_restore(
 #else
   return SQLITE_INTERNAL;
 #endif
+}
+
+static int recoverDatabase(JNIEnv *env, sqlite3 *db, const char *zDestFile){
+  int rc;                                 /* Return code from this routine */
+  const char *zLAF = "lost_and_found";    /* Name of "lost_and_found" table */
+  int bFreelist = 1;                      /* True to scan the freelist */
+  int bRowids = 1;                        /* True to restore ROWID values */
+  sqlite3_recover *p;                     /* The recovery object */
+
+  p = sqlite3_recover_init(db, "main", zDestFile);
+  sqlite3_recover_config(p, SQLITE_RECOVER_LOST_AND_FOUND, (void*)zLAF);
+  sqlite3_recover_config(p, SQLITE_RECOVER_ROWIDS, (void*)&bRowids);
+  sqlite3_recover_config(p, SQLITE_RECOVER_FREELIST_CORRUPT,(void*)&bFreelist);
+  sqlite3_recover_run(p);
+  if( sqlite3_recover_errcode(p)!=SQLITE_OK ){
+    const char *zErr = sqlite3_recover_errmsg(p);
+    int errCode = sqlite3_recover_errcode(p);
+    size_t len = strlen(zErr) + 20; // Extra space for " CODE: " and the error number
+    char *ex_msg = (char *)malloc(len);
+    if (ex_msg) {
+        snprintf(ex_msg, len, "%s CODE: %d", zErr, errCode);
+    }
+    throwex_msg(env, ex_msg);
+    free(ex_msg);
+  }
+  rc = sqlite3_recover_finish(p);
+  return rc;
+}
+
+JNIEXPORT jint JNICALL Java_org_sqlite_core_NativeDB_recoverDatabase(
+	JNIEnv *env,
+	jobject this,
+	jbyteArray destFilePath
+)
+{
+   sqlite3 *db = gethandle(env, this);
+   if (!db)
+   {
+		throwex_db_closed(env);
+		return SQLITE_MISUSE;
+   }
+   char* dDestFilePath;
+   utf8JavaByteArrayToUtf8Bytes(env, destFilePath, &dDestFilePath, NULL);
+   int rc = recoverDatabase(env, db, dDestFilePath);
+   freeUtf8Bytes(dDestFilePath);
+   return rc;
 }
 
 
@@ -1896,7 +1943,7 @@ JNIEXPORT jbyteArray JNICALL Java_org_sqlite_core_NativeDB_serialize(JNIEnv *env
    (*env)->ReleaseStringUTFChars(env, jschema, schema);
 
    jbyteArray jbuff =  (*env)->NewByteArray(env, size);
-   if (jbuff!=NULL) 
+   if (jbuff!=NULL)
    {
       void *jbuff_pointer = (*env)->GetPrimitiveArrayCritical(env, jbuff, NULL);
       if (jbuff_pointer!=NULL)
@@ -1936,13 +1983,13 @@ JNIEXPORT void JNICALL Java_org_sqlite_core_NativeDB_deserialize(JNIEnv *env, jo
    jlong size = (*env)->GetArrayLength(env, jbuff);
    unsigned char *sqlite_buff = sqlite3_malloc64(size);
    if (sqlite_buff==NULL)
-   {  
+   {
       throwex_msg(env, "Failed to allocate native memory for database");
       return;
    }
 
    void *buff = (*env)->GetPrimitiveArrayCritical(env, jbuff, NULL);
-   if (buff==NULL) 
+   if (buff==NULL)
    {
       throwex_msg(env, "Failed to get byte[] address");
       sqlite3_free(sqlite_buff);
@@ -1953,7 +2000,7 @@ JNIEXPORT void JNICALL Java_org_sqlite_core_NativeDB_deserialize(JNIEnv *env, jo
 
    const char* schema = (*env)->GetStringUTFChars(env, jschema, 0);
    int ret = sqlite3_deserialize(db, schema, sqlite_buff, size, size, SQLITE_DESERIALIZE_FREEONCLOSE | SQLITE_DESERIALIZE_RESIZEABLE);
-   if (ret!=SQLITE_OK) 
+   if (ret!=SQLITE_OK)
    {
       throwex_errorcode(env, this, ret);
    }

@@ -816,6 +816,8 @@ public abstract class DB implements Codes {
             int pagesPerStep)
             throws SQLException;
 
+    public abstract int recoverDatabase(String destFilePath) throws SQLException;
+
     /**
      * @param id The id of the limit.
      * @param value The new value of the limit.
