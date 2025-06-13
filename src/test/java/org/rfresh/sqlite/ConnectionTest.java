@@ -426,7 +426,7 @@ public class ConnectionTest {
                 .isThrownBy(
                         () -> {
                             @SuppressWarnings({"resource", "unused"})
-                            Connection _c = cfg.createConnection("jdbc:sqlite:" + nonExisting);
+                            Connection _c = cfg.createConnection("jdbc:rfresh_sqlite:" + nonExisting);
                         })
                 .satisfies(
                         e ->
@@ -449,7 +449,7 @@ public class ConnectionTest {
                 .isThrownBy(
                         () -> {
                             @SuppressWarnings({"resource", "unused"})
-                            Connection _c = cfg.createConnection("jdbc:sqlite:" + nonExisting);
+                            Connection _c = cfg.createConnection("jdbc:rfresh_sqlite:" + nonExisting);
                         })
                 .satisfies(
                         e ->
