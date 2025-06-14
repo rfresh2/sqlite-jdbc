@@ -29,8 +29,8 @@
 **
 **   3) Executes the recovery by repeatedly calling sqlite3_recover_step() on
 **      the handle until it returns something other than SQLITE_OK. If it
-**      returns SQLITE_DONE, then the recovery operation completed without 
-**      error. If it returns some other non-SQLITE_OK value, then an error 
+**      returns SQLITE_DONE, then the recovery operation completed without
+**      error. If it returns some other non-SQLITE_OK value, then an error
 **      has occurred.
 **
 **   4) Retrieves any error code and English language error message using the
@@ -40,7 +40,7 @@
 **   5) Destroys the sqlite3_recover handle and frees all resources
 **      using sqlite3_recover_finish().
 **
-** The application may abandon the recovery operation at any point 
+** The application may abandon the recovery operation at any point
 ** before it is finished by passing the sqlite3_recover handle to
 ** sqlite3_recover_finish(). This is not an error, but the final state
 ** of the output database, or the results of running the partial script
@@ -79,7 +79,7 @@ extern "C" {
 */
 typedef struct sqlite3_recover sqlite3_recover;
 
-/* 
+/*
 ** These two APIs attempt to create and return a new sqlite3_recover object.
 ** In both cases the first two arguments identify the (possibly
 ** corrupt) database to recover data from. The first argument is an open
@@ -96,10 +96,10 @@ typedef struct sqlite3_recover sqlite3_recover;
 ** be returned to the user as a series of SQL statements. Executing these
 ** SQL statements results in the same database as would have been created
 ** had sqlite3_recover_init() been used. For each SQL statement in the
-** output, the callback function passed as the third argument (xSql) is 
+** output, the callback function passed as the third argument (xSql) is
 ** invoked once. The first parameter is a passed a copy of the fourth argument
 ** to this function (pCtx) as its first parameter, and a pointer to a
-** nul-terminated buffer containing the SQL statement formated as UTF-8 as 
+** nul-terminated buffer containing the SQL statement formated as UTF-8 as
 ** the second. If the xSql callback returns any value other than SQLITE_OK,
 ** then processing is immediately abandoned and the value returned used as
 ** the recover handle error code (see below).
@@ -110,13 +110,13 @@ typedef struct sqlite3_recover sqlite3_recover;
 ** sqlite3_recover_finish() is called on all allocated handles.
 */
 sqlite3_recover *sqlite3_recover_init(
-  sqlite3* db, 
-  const char *zDb, 
+  sqlite3* db,
+  const char *zDb,
   const char *zUri
 );
 sqlite3_recover *sqlite3_recover_init_sql(
-  sqlite3* db, 
-  const char *zDb, 
+  sqlite3* db,
+  const char *zDb,
   int (*xSql)(void*, const char*),
   void *pCtx
 );
@@ -149,11 +149,11 @@ int sqlite3_recover_config(sqlite3_recover*, int op, void *pArg);
 **   The pArg value must actually be a pointer to a value of type
 **   int containing value 0 or 1 cast as a (void*). If this option is set
 **   (argument is 1) and a lost-and-found table has been configured using
-**   SQLITE_RECOVER_LOST_AND_FOUND, then is assumed that the freelist is 
+**   SQLITE_RECOVER_LOST_AND_FOUND, then is assumed that the freelist is
 **   corrupt and an attempt is made to recover records from pages that
 **   appear to be linked into the freelist. Otherwise, pages on the freelist
 **   are ignored. Setting this option can recover more data from the
-**   database, but often ends up "recovering" deleted records. The default 
+**   database, but often ends up "recovering" deleted records. The default
 **   value is 0 (clear).
 **
 ** SQLITE_RECOVER_ROWIDS:
@@ -167,7 +167,7 @@ int sqlite3_recover_config(sqlite3_recover*, int op, void *pArg);
 ** SQLITE_RECOVER_SLOWINDEXES:
 **   The pArg value must actually be a pointer to a value of type
 **   int containing value 0 or 1 cast as a (void*). If this option is clear
-**   (argument is 0), then when creating an output database, the recover 
+**   (argument is 0), then when creating an output database, the recover
 **   module creates and populates non-UNIQUE indexes right at the end of the
 **   recovery operation - after all recoverable data has been inserted
 **   into the new database. This is faster overall, but means that the
@@ -175,7 +175,7 @@ int sqlite3_recover_config(sqlite3_recover*, int op, void *pArg);
 **   be need to create a large number of indexes, which may be very slow.
 **
 **   Or, if this option is set (argument is 1), then non-UNIQUE indexes
-**   are created in the output database before it is populated with 
+**   are created in the output database before it is populated with
 **   recovered data. This is slower overall, but avoids the slow call
 **   to sqlite3_recover_step() at the end of the recovery operation.
 **
@@ -187,7 +187,7 @@ int sqlite3_recover_config(sqlite3_recover*, int op, void *pArg);
 #define SQLITE_RECOVER_SLOWINDEXES      4
 
 /*
-** Perform a unit of work towards the recovery operation. This function 
+** Perform a unit of work towards the recovery operation. This function
 ** must normally be called multiple times to complete database recovery.
 **
 ** If no error occurs but the recovery operation is not completed, this
@@ -203,7 +203,7 @@ int sqlite3_recover_config(sqlite3_recover*, int op, void *pArg);
 */
 int sqlite3_recover_step(sqlite3_recover*);
 
-/* 
+/*
 ** Run the recovery operation to completion. Return SQLITE_OK if successful,
 ** or an SQLite error code otherwise. Calling this function is the same
 ** as executing:
@@ -215,9 +215,9 @@ int sqlite3_recover_run(sqlite3_recover*);
 
 /*
 ** If an error has been encountered during a prior call to
-** sqlite3_recover_step(), then this function attempts to return a 
-** pointer to a buffer containing an English language explanation of 
-** the error. If no error message is available, or if an out-of memory 
+** sqlite3_recover_step(), then this function attempts to return a
+** pointer to a buffer containing an English language explanation of
+** the error. If no error message is available, or if an out-of memory
 ** error occurs while attempting to allocate a buffer in which to format
 ** the error message, NULL is returned.
 **
@@ -232,7 +232,7 @@ const char *sqlite3_recover_errmsg(sqlite3_recover*);
 */
 int sqlite3_recover_errcode(sqlite3_recover*);
 
-/* 
+/*
 ** Clean up a recovery object created by a call to sqlite3_recover_init().
 ** The results of using a recovery object with any API after it has been
 ** passed to this function are undefined.
