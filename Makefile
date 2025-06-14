@@ -21,15 +21,22 @@ SQLITE_ARCHIVE:=$(TARGET)/$(sqlite)-amal.zip
 SQLITE_UNPACKED:=$(TARGET)/sqlite-unpack.log
 SQLITE_SOURCE?=$(TARGET)/$(SQLITE_AMAL_PREFIX)
 SQLITE_HEADER?=$(SQLITE_SOURCE)/sqlite3.h
-RECOVERY_SRC := $(wildcard src/main/ext_recovery/*.c)
-RECOVERY_OBJ := $(patsubst src/main/ext_recovery/%.c, $(SQLITE_OUT)/%.o, $(RECOVERY_SRC))
 ifneq ($(SQLITE_SOURCE),$(TARGET)/$(SQLITE_AMAL_PREFIX))
 	created := $(shell touch $(SQLITE_UNPACKED))
 endif
+RECOVERY_DIR:=$(TARGET)/recovery
+RECOVERY_C:=$(RECOVERY_DIR)/sqlite3recover.c $(RECOVERY_DIR)/dbdata.c
+RECOVERY_OBJ:=$(RECOVERY_DIR)/sqlite3recover.o $(RECOVERY_DIR)/dbdata.o
+
+$(RECOVERY_DIR):
+	@mkdir -p $(@D)
+	curl -L -o$@/sqlite3recover.c "https://sqlite.org/src/raw/56c216332ea91233d6d820d429f3384adbec9ecedda67aa98186b691d427cc57?at=sqlite3recover.c" && \
+	curl -L -o$@/sqlite3recover.h "https://sqlite.org/src/raw/011c799f02deb70ab685916f6f538e6bb32c4e0025e79bfd0e24ff9c74820959?at=sqlite3recover.h" && \
+	curl -L -o$@/dbdata.c "https://sqlite.org/src/raw/10d3c56968a9af6853722a47280805ad1564714d79ea45ac6f7da14bb57fd137?at=dbdata.c"
 
 SQLITE_INCLUDE := $(shell dirname "$(SQLITE_HEADER)")
 
-CCFLAGS:= -I$(SQLITE_OUT) -I$(SQLITE_INCLUDE) -Isrc/main/ext_recovery $(CCFLAGS)
+CCFLAGS:= -I$(SQLITE_OUT) -I$(SQLITE_INCLUDE) -I$(RECOVERY_DIR) $(CCFLAGS)
 
 $(SQLITE_ARCHIVE):
 	@mkdir -p $(@D)
@@ -111,9 +118,10 @@ $(SQLITE_OUT)/sqlite3.o : $(SQLITE_UNPACKED)
 
 $(SQLITE_SOURCE)/sqlite3.h: $(SQLITE_UNPACKED)
 
-$(SQLITE_OUT)/%.o: src/main/ext_recovery/%.c
+$(RECOVERY_OBJ): $(RECOVERY_DIR) $(RECOVERY_C)
 	@mkdir -p $(@D)
-	$(CC) $(CCFLAGS) -c -o $@ $<
+	$(CC) $(CCFLAGS) -I $(RECOVERY_DIR) -c -o $(RECOVERY_DIR)/sqlite3recover.o $(RECOVERY_DIR)/sqlite3recover.c
+	$(CC) $(CCFLAGS) -I $(RECOVERY_DIR) -c -o $(RECOVERY_DIR)/dbdata.o $(RECOVERY_DIR)/dbdata.c
 
 $(SQLITE_OUT)/$(LIBNAME): $(SQLITE_HEADER) $(SQLITE_OBJ) $(SRC)/org/sqlite/core/NativeDB.c $(TARGET)/common-lib/NativeDB.h $(RECOVERY_OBJ)
 	@mkdir -p $(@D)
