@@ -42,6 +42,18 @@ public class RecoverTest {
         }
         System.out.println(dest.getAbsolutePath());
         assertThat(dest.exists()).isTrue();
+
+        try (Connection conn = DriverManager.getConnection("jdbc:rfresh_sqlite:" + dest.getAbsolutePath())) {
+            try (Statement stmt = conn.createStatement()) {
+                ResultSet rs = stmt.executeQuery("select * from sample");
+                AtomicInteger count = new AtomicInteger();
+                while (rs.next()) {
+                    assertThat(rs.getInt(1)).isEqualTo(count.incrementAndGet());
+                    assertThat(rs.getString(2)).isIn("leo", "yui");
+                }
+                assertThat(count.get()).isEqualTo(2);
+            }
+        }
     }
 
     private void createTableAndInsertRows(Statement stmt) throws SQLException {
