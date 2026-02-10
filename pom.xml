@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.rfresh.xerial</groupId>
     <artifactId>sqlite-jdbc</artifactId>
-    <version>3.51.1.0</version>
+    <version>3.51.2.0</version>
     <name>SQLite JDBC</name>
     <description>SQLite JDBC library</description>
     <url>https://github.com/xerial/sqlite-jdbc</url>
@@ -14,7 +14,7 @@
         <junit.version>5.12.2</junit.version>
         <surefire.version>3.5.4</surefire.version>
         <archunit.version>1.4.1</archunit.version>
-        <graalvm.version>25.0.1</graalvm.version>
+        <graalvm.version>25.0.2</graalvm.version>
         <java9.sourceDirectory>${project.basedir}/src/main/java9</java9.sourceDirectory>
     </properties>
 
@@ -101,7 +101,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.14.1</version>
+                <version>3.15.0</version>
                 <configuration>
                     <release>8</release>
                 </configuration>
@@ -165,7 +165,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.20.1</version>
+                <version>2.21.0</version>
             </plugin>
 
             <plugin>
@@ -260,7 +260,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.3.1</version>
+                        <version>3.4.0</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -281,7 +281,7 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>0.11.3</version>
+                        <version>0.11.4</version>
                         <extensions>true</extensions>
                         <executions>
                             <execution>
@@ -422,7 +422,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.20.0</version>
+            <version>5.21.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>

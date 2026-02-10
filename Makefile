@@ -39,7 +39,7 @@ CCFLAGS:= -I$(SQLITE_OUT) -I$(SQLITE_INCLUDE) -Isrc/main/ext_recovery $(CCFLAGS)
 
 $(SQLITE_SRC_ARCHIVE):
 	mkdir -p $(@D)
-	curl -L --max-redirs 0 -f -o$@ https://www.sqlite.org/2025/$(SQLITE_SRC_PREFIX).zip
+	curl -L --max-redirs 0 -f -o$@ https://www.sqlite.org/2026/$(SQLITE_SRC_PREFIX).zip
 
 $(SQLITE_SRC): $(SQLITE_SRC_ARCHIVE)
 	unzip -qo $< -d $(TARGET)/tmp-src.$(version)
@@ -59,6 +59,7 @@ $(SQLITE_ARCHIVE): $(SQLITE_AMALGAMATION_ZIP_FROM_SRC)
 endif
 	@mkdir -p $(@D)
 	cp -v $(SQLITE_AMALGAMATION_ZIP_FROM_SRC) $@ || \
+	curl -L --max-redirs 0 -f -o$@ https://www.sqlite.org/2026/$(SQLITE_AMAL_PREFIX).zip || \
 	curl -L --max-redirs 0 -f -o$@ https://www.sqlite.org/2025/$(SQLITE_AMAL_PREFIX).zip || \
 	curl -L --max-redirs 0 -f -o$@ https://www.sqlite.org/2024/$(SQLITE_AMAL_PREFIX).zip || \
 	curl -L --max-redirs 0 -f -o$@ https://www.sqlite.org/2023/$(SQLITE_AMAL_PREFIX).zip || \
@@ -116,6 +117,7 @@ $(SQLITE_OUT)/sqlite3.o : $(SQLITE_UNPACKED)
 	    -DSQLITE_ENABLE_FTS3_PARENTHESIS \
 	    -DSQLITE_ENABLE_FTS5 \
 	    -DSQLITE_ENABLE_RTREE \
+	    -DSQLITE_ENABLE_PERCENTILE \
 	    -DSQLITE_ENABLE_STAT4 \
 	    -DSQLITE_ENABLE_DBSTAT_VTAB \
 	    -DSQLITE_ENABLE_MATH_FUNCTIONS \
