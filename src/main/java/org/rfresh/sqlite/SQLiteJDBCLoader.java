@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.stream.Stream;
+import org.rfresh.sqlite.util.AndroidSignatureIgnore;
 import org.rfresh.sqlite.util.LibraryLoaderUtil;
 import org.rfresh.sqlite.util.Logger;
 import org.rfresh.sqlite.util.LoggerFactory;
@@ -57,6 +58,7 @@ import org.rfresh.sqlite.util.StringUtils;
  *
  * @author leo
  */
+@AndroidSignatureIgnore(explanation = "The loader is not used on Android")
 public class SQLiteJDBCLoader {
     private static final Logger logger = LoggerFactory.getLogger(SQLiteJDBCLoader.class);
 

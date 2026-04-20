@@ -8,6 +8,7 @@ import org.rfresh.sqlite.*;
 import org.rfresh.sqlite.core.DB;
 import org.rfresh.sqlite.core.NativeDB;
 import org.rfresh.sqlite.jdbc3.JDBC3DatabaseMetaData;
+import org.rfresh.sqlite.util.AndroidSignatureIgnore;
 import org.rfresh.sqlite.util.LibraryLoaderUtil;
 import org.rfresh.sqlite.util.OSInfo;
 import org.rfresh.sqlite.util.ProcessRunner;
@@ -21,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+@AndroidSignatureIgnore(explanation = "Used by GraalVM only")
 public class SqliteJdbcFeature implements Feature {
 
     @Override

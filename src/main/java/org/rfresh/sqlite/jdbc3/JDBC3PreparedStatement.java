@@ -27,6 +27,7 @@ import org.rfresh.sqlite.SQLiteConnection;
 import org.rfresh.sqlite.core.CoreStatement;
 import org.rfresh.sqlite.core.CorePreparedStatement;
 import org.rfresh.sqlite.core.DB;
+import org.rfresh.sqlite.util.AndroidSignatureIgnore;
 
 public abstract class JDBC3PreparedStatement extends CorePreparedStatement {
 
@@ -171,6 +172,7 @@ public abstract class JDBC3PreparedStatement extends CorePreparedStatement {
     }
 
     /** @see java.sql.ParameterMetaData#getParameterTypeName(int) */
+    @AndroidSignatureIgnore(explanation = "Android does not support java.sql.JDBCType")
     public String getParameterTypeName(int pos) throws SQLException {
         checkIndex(pos);
         return JDBCType.valueOf(getParameterType(pos)).getName();
