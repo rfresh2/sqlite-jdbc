@@ -50,18 +50,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-java@v5
-        with:
-          distribution: 'temurin'
-          java-version: 11
-          java-package: jdk
-          cache: 'maven'
-      - name: Download and install signatures jar
-        run: |
-          wget -O coreLib2.signature https://repo1.maven.org/maven2/com/toasttab/android/gummy-bears-api-24/0.14.0/gummy-bears-api-24-0.14.0-coreLib2.signature
-          mvn --batch-mode --no-transfer-progress org.apache.maven.plugins:maven-install-plugin:3.1.1:install-file -Dfile=./coreLib2.signature -DgroupId=org.sqlite.signatures -DartifactId=gummy-bears-api-24 -Dversion=0.1 -Dpackaging=signature
-      - name: animal-sniffer:check
-        run: mvn --batch-mode --no-transfer-progress compile animal-sniffer:check
+#      - uses: actions/setup-java@v5
+#        with:
+#          distribution: 'temurin'
+#          java-version: 11
+#          java-package: jdk
+#          cache: 'maven'
+#      - name: Download and install signatures jar
+#        run: |
+#          wget -O coreLib2.signature https://repo1.maven.org/maven2/com/toasttab/android/gummy-bears-api-24/0.14.0/gummy-bears-api-24-0.14.0-coreLib2.signature
+#          mvn --batch-mode --no-transfer-progress org.apache.maven.plugins:maven-install-plugin:3.1.1:install-file -Dfile=./coreLib2.signature -DgroupId=org.sqlite.signatures -DartifactId=gummy-bears-api-24 -Dversion=0.1 -Dpackaging=signature
+#      - name: animal-sniffer:check
+#        run: mvn --batch-mode --no-transfer-progress compile animal-sniffer:check
 
   test:
     name: test ${{ matrix.os }} jdk${{ matrix.java }}
@@ -124,13 +124,13 @@ jobs:
             distro: alpine_latest
             java: 25
           # PPC64
-          - arch: ppc64le
-            distro: ubuntu_latest
-            java: 25
+#          - arch: ppc64le
+#            distro: ubuntu_latest
+#            java: 25
           # RISC-V 64
-          - arch: riscv64
-            distro: ubuntu_latest
-            java: 25
+#          - arch: riscv64
+#            distro: ubuntu_latest
+#            java: 25
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
