@@ -18,6 +18,7 @@ JAVA_CLASSPATH?=$(TARGET)/classpath/slf4j-api.jar
 SQLITE_OUT:=$(TARGET)/$(sqlite)-$(OS_NAME)-$(OS_ARCH)
 SQLITE_OBJ?=$(SQLITE_OUT)/sqlite3.o
 SQLITE_SRC_ARCHIVE:=$(TARGET)/$(sqlite)-src.zip
+SQLITE_SRC_UNPACKED:=$(TARGET)/sqlite-src-unpack.log
 SQLITE_SRC:=$(TARGET)/sqlite-src.log
 SQLITE_SRC_TMP:=$(TARGET)/tmp-src.$(version)/$(SQLITE_SRC_PREFIX)
 SQLITE_AMALGAMATION_FROM_SRC:=$(TARGET)/tmp-src.$(version)/$(SQLITE_AMAL_PREFIX)
@@ -26,8 +27,11 @@ SQLITE_ARCHIVE:=$(TARGET)/$(sqlite)-amal.zip
 SQLITE_UNPACKED:=$(TARGET)/sqlite-unpack.log
 SQLITE_SOURCE?=$(TARGET)/$(SQLITE_AMAL_PREFIX)
 SQLITE_HEADER?=$(SQLITE_SOURCE)/sqlite3.h
-RECOVERY_SRC := $(wildcard src/main/ext_recovery/*.c)
-RECOVERY_OBJ := $(patsubst src/main/ext_recovery/%.c, $(SQLITE_OUT)/%.o, $(RECOVERY_SRC))
+RECOVERY_SOURCE:=$(TARGET)/sqlite-recovery-$(version)
+RECOVERY_UNPACKED:=$(TARGET)/sqlite-recovery.log
+RECOVERY_SRC := $(RECOVERY_SOURCE)/dbdata.c $(RECOVERY_SOURCE)/sqlite3recover.c
+RECOVERY_HEADER := $(RECOVERY_SOURCE)/sqlite3recover.h
+RECOVERY_OBJ := $(patsubst $(RECOVERY_SOURCE)/%.c, $(SQLITE_OUT)/%.o, $(RECOVERY_SRC))
 ifneq ($(SQLITE_SOURCE),$(TARGET)/$(SQLITE_AMAL_PREFIX))
 	created := $(shell touch $(SQLITE_UNPACKED))
 endif
@@ -35,20 +39,37 @@ ENABLE_UPDATE_DELETE_LIMIT?=1
 
 SQLITE_INCLUDE := $(shell dirname "$(SQLITE_HEADER)")
 
-CCFLAGS:= -I$(SQLITE_OUT) -I$(SQLITE_INCLUDE) -Isrc/main/ext_recovery $(CCFLAGS)
+CCFLAGS:= -I$(SQLITE_OUT) -I$(SQLITE_INCLUDE) -I$(RECOVERY_SOURCE) $(CCFLAGS)
 
 $(SQLITE_SRC_ARCHIVE):
 	mkdir -p $(@D)
-	curl -L --max-redirs 0 -f -o$@ https://www.sqlite.org/2026/$(SQLITE_SRC_PREFIX).zip
+	curl -L --max-redirs 0 -f -o$@ https://www.sqlite.org/2026/$(SQLITE_SRC_PREFIX).zip || \
+	curl -L --max-redirs 0 -f -o$@ https://www.sqlite.org/2025/$(SQLITE_SRC_PREFIX).zip || \
+	curl -L --max-redirs 0 -f -o$@ https://www.sqlite.org/2024/$(SQLITE_SRC_PREFIX).zip || \
+	curl -L --max-redirs 0 -f -o$@ https://www.sqlite.org/2023/$(SQLITE_SRC_PREFIX).zip || \
+	curl -L --max-redirs 0 -f -o$@ https://www.sqlite.org/2022/$(SQLITE_SRC_PREFIX).zip || \
+	curl -L --max-redirs 0 -f -o$@ https://www.sqlite.org/2021/$(SQLITE_SRC_PREFIX).zip || \
+	curl -L --max-redirs 0 -f -o$@ https://www.sqlite.org/2020/$(SQLITE_SRC_PREFIX).zip || \
+	curl -L --max-redirs 0 -f -o$@ https://www.sqlite.org/$(SQLITE_SRC_PREFIX).zip
 
-$(SQLITE_SRC): $(SQLITE_SRC_ARCHIVE)
+$(SQLITE_SRC_UNPACKED): $(SQLITE_SRC_ARCHIVE)
 	unzip -qo $< -d $(TARGET)/tmp-src.$(version)
+	touch $@
+
+$(SQLITE_SRC): $(SQLITE_SRC_UNPACKED)
 	((cd $(SQLITE_SRC_TMP) && ./configure --update-limit && make sqlite3.c) | tee $@)
 
 $(SQLITE_AMALGAMATION_ZIP_FROM_SRC): $(SQLITE_SRC)
 	mkdir -p $(SQLITE_AMALGAMATION_FROM_SRC)
 	cp $(SQLITE_SRC_TMP)/sqlite3.c $(SQLITE_SRC_TMP)/sqlite3.h $(SQLITE_SRC_TMP)/sqlite3ext.h $(SQLITE_AMALGAMATION_FROM_SRC)/
 	(cd $(SQLITE_AMALGAMATION_FROM_SRC)/.. && zip -r $(SQLITE_AMAL_PREFIX).zip $(SQLITE_AMAL_PREFIX))
+
+$(RECOVERY_UNPACKED): $(SQLITE_SRC_UNPACKED)
+	@mkdir -p $(RECOVERY_SOURCE)
+	cp $(SQLITE_SRC_TMP)/ext/recover/dbdata.c $(RECOVERY_SOURCE)/
+	cp $(SQLITE_SRC_TMP)/ext/recover/sqlite3recover.c $(RECOVERY_SOURCE)/
+	cp $(SQLITE_SRC_TMP)/ext/recover/sqlite3recover.h $(RECOVERY_SOURCE)/
+	touch $@
 
 ifneq ($(ENABLE_UPDATE_DELETE_LIMIT),1)
 ENABLE_UPDATE_DELETE_LIMIT_FLAG :=
@@ -140,11 +161,13 @@ $(SQLITE_OUT)/sqlite3.o : $(SQLITE_UNPACKED)
 
 $(SQLITE_SOURCE)/sqlite3.h: $(SQLITE_UNPACKED)
 
-$(SQLITE_OUT)/%.o: src/main/ext_recovery/%.c
+$(RECOVERY_SRC) $(RECOVERY_HEADER): $(RECOVERY_UNPACKED)
+
+$(SQLITE_OUT)/%.o: $(RECOVERY_SOURCE)/%.c $(RECOVERY_HEADER)
 	@mkdir -p $(@D)
 	$(CC) $(CCFLAGS) -c -o $@ $<
 
-$(SQLITE_OUT)/$(LIBNAME): $(SQLITE_HEADER) $(SQLITE_OBJ) $(SRC)/org/rfresh/sqlite/core/NativeDB.c $(TARGET)/common-lib/NativeDB.h $(RECOVERY_OBJ)
+$(SQLITE_OUT)/$(LIBNAME): $(SQLITE_HEADER) $(SQLITE_OBJ) $(SRC)/org/rfresh/sqlite/core/NativeDB.c $(TARGET)/common-lib/NativeDB.h $(RECOVERY_HEADER) $(RECOVERY_OBJ)
 	@mkdir -p $(@D)
 	$(CC) $(CCFLAGS) -I $(TARGET)/common-lib -c -o $(SQLITE_OUT)/NativeDB.o $(SRC)/org/rfresh/sqlite/core/NativeDB.c
 	$(CC) $(CCFLAGS) -o $@ $(SQLITE_OUT)/NativeDB.o $(SQLITE_OBJ) $(RECOVERY_OBJ) $(LINKFLAGS)
