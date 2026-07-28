@@ -643,11 +643,11 @@ public abstract class JDBC3ResultSet extends CoreResultSet {
                 return Types.BIGINT;
             }
 
-            if ("DATE".equals(typeName) || "DATETIME".equals(typeName)) {
+            if ("DATE".equals(typeName)) {
                 return Types.DATE;
             }
 
-            if ("TIMESTAMP".equals(typeName)) {
+            if ("DATETIME".equals(typeName) || "TIMESTAMP".equals(typeName)) {
                 return Types.TIMESTAMP;
             }
 
@@ -698,11 +698,11 @@ public abstract class JDBC3ResultSet extends CoreResultSet {
                 return Types.CLOB;
             }
 
-            if ("DATE".equals(typeName) || "DATETIME".equals(typeName)) {
+            if ("DATE".equals(typeName)) {
                 return Types.DATE;
             }
 
-            if ("TIMESTAMP".equals(typeName)) {
+            if ("DATETIME".equals(typeName) || "TIMESTAMP".equals(typeName)) {
                 return Types.TIMESTAMP;
             }
 
