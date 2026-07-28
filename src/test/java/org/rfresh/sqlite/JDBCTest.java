@@ -74,7 +74,7 @@ public class JDBCTest {
 
     @Test
     public void createConnectionAcceptsValidSqliteUrl() throws Exception {
-        try (Connection conn = JDBC.createConnection("jdbc:sqlite:", new Properties())) {
+        try (Connection conn = JDBC.createConnection("jdbc:rfresh_sqlite:", new Properties())) {
             assertThat(conn).isNotNull();
             assertThat(conn.isClosed()).isFalse();
         }

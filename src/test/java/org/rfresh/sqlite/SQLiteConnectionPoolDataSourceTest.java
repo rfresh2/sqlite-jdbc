@@ -68,7 +68,7 @@ public class SQLiteConnectionPoolDataSourceTest {
     @Test
     public void concurrentReuseDoesNotRaceOnClose() throws Exception {
         SQLiteConnectionPoolDataSource ds = new SQLiteConnectionPoolDataSource();
-        ds.setUrl("jdbc:sqlite::memory:");
+        ds.setUrl("jdbc:rfresh_sqlite::memory:");
 
         DummyPool pool = new DummyPool(ds);
         AtomicReference<Throwable> failure = new AtomicReference<>();
