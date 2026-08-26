@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.rfresh.xerial</groupId>
     <artifactId>sqlite-jdbc</artifactId>
-    <version>3.53.2.1</version>
+    <version>3.53.4.0</version>
     <name>SQLite JDBC</name>
     <description>SQLite JDBC library</description>
     <url>https://github.com/xerial/sqlite-jdbc</url>
@@ -13,8 +13,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.12.2</junit.version>
         <surefire.version>3.5.6</surefire.version>
-        <archunit.version>1.4.2</archunit.version>
-        <graalvm.version>25.1.3</graalvm.version>
+        <archunit.version>1.5.0</archunit.version>
+        <graalvm.version>25.2.4</graalvm.version>
         <java9.sourceDirectory>${project.basedir}/src/main/java9</java9.sourceDirectory>
     </properties>
 
@@ -425,7 +425,7 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>1.1.5</version>
+                        <version>1.1.10</version>
                         <extensions>true</extensions>
                         <executions>
                             <execution>
