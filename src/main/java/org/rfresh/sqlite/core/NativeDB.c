@@ -574,7 +574,6 @@ JNIEXPORT void JNICALL Java_org_rfresh_sqlite_core_NativeDB__1open_1utf8(
     db = gethandle(env, this);
     if (db) {
         throwex_msg(env, "DB already open");
-        sqlite3_close(db);
         return;
     }
 
@@ -1949,7 +1948,7 @@ JNIEXPORT jbyteArray JNICALL Java_org_rfresh_sqlite_core_NativeDB_serialize(JNIE
       if (jbuff_pointer!=NULL)
       {
          memcpy(jbuff_pointer, buff, size);
-         (*env)->ReleasePrimitiveArrayCritical(env, jbuff, buff, 0);
+         (*env)->ReleasePrimitiveArrayCritical(env, jbuff, jbuff_pointer, 0);
       }
       else
       {
