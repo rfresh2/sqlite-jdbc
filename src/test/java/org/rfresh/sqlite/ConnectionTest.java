@@ -155,7 +155,7 @@ public class ConnectionTest {
 
     @Test
     public void openAlreadyOpenKeepsConnection() throws SQLException {
-        SQLiteConnection conn = (SQLiteConnection) DriverManager.getConnection("jdbc:sqlite:");
+        SQLiteConnection conn = (SQLiteConnection) DriverManager.getConnection("jdbc:rfresh_sqlite:");
         assertThatExceptionOfType(SQLException.class)
                 .isThrownBy(
                         () ->
@@ -223,7 +223,7 @@ public class ConnectionTest {
         try (Connection conn =
                         DriverManager.getConnection(
                                 String.format(
-                                        "jdbc:sqlite::resource:jar:%s!/sample.db",
+                                        "jdbc:rfresh_sqlite::resource:jar:%s!/sample.db",
                                         testJAR.toURI().toURL()));
                 Statement stat = conn.createStatement();
                 ResultSet rs = stat.executeQuery("pragma database_list")) {
@@ -376,7 +376,7 @@ public class ConnectionTest {
     public void automaticIndexAndCacheSpillInURI() throws Exception {
         Connection conn =
                 DriverManager.getConnection(
-                        "jdbc:sqlite:file::memory:?automatic_index=OFF&cache_spill=OFF");
+                        "jdbc:rfresh_sqlite:file::memory:?automatic_index=OFF&cache_spill=OFF");
         Statement stat = conn.createStatement();
 
         ResultSet rs = stat.executeQuery("pragma automatic_index");
